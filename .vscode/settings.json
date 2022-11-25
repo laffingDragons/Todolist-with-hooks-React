@@ -16,12 +16,13 @@
         "titleBar.activeBackground": "#fc2738",
         "titleBar.activeForeground": "#e7e7e7",
         "titleBar.inactiveBackground": "#fc273899",
-        "titleBar.inactiveForeground": "#e7e7e799"
+        "titleBar.inactiveForeground": "#e7e7e799",
+        "commandCenter.border": "#e7e7e799"
     },
     "emmet.includeLanguages": {
         "javascript": "javascriptreact"
-      },
-      "editor.formatOnPaste": true,
-  "editor.formatOnSave": true,
+    },
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
     "peacock.color": "#fc2738"
 }

@@ -239,6 +239,10 @@ label:active {
   transform: translateX(78px);
 }
 
+.sucess {
+  color: #07d410;
+}
+
 ._checkboxId:checked+label {
   background-color: #07d410;
   box-shadow: 0 7px 10px #92ff97;
@@ -281,16 +285,24 @@ label:active {
   margin: 10%;
 }
 
+.sticky {
+  position: sticky;
+  top: 10px;
+}
+
 .add-input {
-  font-size: 18px;
+  background: transparent;
+  font-size: 16px;
+  /* border: none; */
   border-radius: 16px;
   border: 1px solid #b693f5;
   padding: 7px 10px;
   color: #7b50ff;
+  backdrop-filter: blur(15px);
 }
 
 .primary-btn {
-  font-size: 18px;
+  font-size: 16px;
   border-radius: 15px;
   border: 1px solid #E7DFF5;
   background: #7b50ff;
@@ -319,4 +331,13 @@ label:active {
 
 .f-huge {
   font-size: 50px;
+}
+
+.date-todo {
+  font-size: 12px;
+  color: #626262dd;
+}
+
+.title-todo {
+  font-size: 16px;
 }

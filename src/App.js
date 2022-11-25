@@ -24,12 +24,15 @@ function App() {
     console.log(todoNameRef.current.value);
     if (name) {
       setTodos(preTodos => {
-        return [...preTodos,
-        {
-          id: uuidv4(),
-          name: name,
-          complete: false
-        }]
+        return [
+          {
+            id: uuidv4(),
+            name: name,
+            complete: false,
+            createdOn: new Date(),
+            completedOn: '',
+          },
+          ...preTodos]
       })
       todoNameRef.current.value = ''
     }
@@ -37,8 +40,16 @@ function App() {
 
   function toogleTodo(id) {
     const newTodos = [...todos];
-    const todo = newTodos.find(x => x.id === id);
-    todo.complete = !todo.complete;
+    let todo = newTodos.find(x => x.id === id);
+
+    if (!todo.complete) {
+      todo.complete = true;
+      todo.completedOn = new Date();
+    } else {
+      todo.complete = false;
+      todo.completedOn = '';
+    }
+
     setTodos(newTodos)
   }
 
@@ -52,13 +63,17 @@ function App() {
     <>
       <div className='z-100 conatiner'>
         <h1 className='primary-text f-huge text-center'>Todolist</h1>
-        <div className=' text-center'>
-          <input ref={todoNameRef} type="text" className='add-input' />
+        <div className=' text-center d-block d-sm-none sticky' >
+          <input ref={todoNameRef} type="text" className='add-input' onKeyPress={event => {
+            if (event.key === 'Enter') {
+              addTodo();
+            }
+          }} />
           <button onClick={addTodo} className='primary-btn'>Add todo</button>
           <br />
         </div>
 
-        <div className='primary-text'>{todos.filter(x => !x.complete).length} todos left todo</div>
+        <div className='primary-text'>{todos.reverse().filter(x => !x.complete).length} todos left todo</div>
         <TodoLists todos={todos} toogleTodo={toogleTodo} />
         <button onClick={completeTodos} className="mt-4 secondary-btn">Complete all todo</button>
 
