@@ -148,7 +148,8 @@ body {
   }
 }
 
-._checkboxId {
+._checkboxId,
+._checkboxId-blue {
   display: none;
 }
 
@@ -340,4 +341,75 @@ label:active {
 
 .title-todo {
   font-size: 16px;
+}
+
+.add-subtask-icon {
+  float: right;
+}
+
+/* Mobile view styles */
+@media (max-width: 768px) {
+  .container {
+    margin: 5%;
+    /* Reduce the margin for mobile devices */
+  }
+
+  .f-huge {
+    font-size: 40px;
+    /* Adjust font size for mobile */
+  }
+
+  .text-center {
+    font-size: 36px;
+    /* Adjust font size for mobile */
+  }
+
+  .add-input {
+    font-size: 14px;
+    /* Reduce input font size */
+    padding: 5px 8px;
+    /* Adjust padding */
+  }
+
+  .primary-btn {
+    font-size: 14px;
+    /* Reduce button font size */
+    padding: 6px 8px;
+    /* Adjust padding */
+  }
+
+  .secondary-btn {
+    font-size: 16px;
+    /* Adjust secondary button font size */
+    padding: 6px 8px;
+    /* Adjust padding */
+  }
+
+  .todo-item {
+    font-size: 14px;
+    /* Adjust task item font size */
+  }
+
+  /* Adjust the size of the waves to fit the mobile screen */
+  .wave {
+    width: 800px;
+    height: 600px;
+  }
+}
+
+._checkboxId-blue:checked+label {
+  background-color: #3498db;
+  /* Blue color */
+  box-shadow: 0 7px 10px #92c8ff;
+}
+
+._checkboxId-blue:checked+label:before {
+  width: 0;
+  height: 0;
+}
+
+._checkboxId-blue:checked+label #tick_mark:before,
+._checkboxId-blue:checked+label #tick_mark:after {
+  transform: translate(0);
+  opacity: 1;
 }

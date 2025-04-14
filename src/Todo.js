@@ -6,7 +6,6 @@ export default function Todo({ todo, toogleTodo }) {
 
     function handleCheck() {
         toogleTodo(todo.id);
-        console.log("🚀 ~ ~ todo", todo.id)
     }
 
     function doNothing() {
