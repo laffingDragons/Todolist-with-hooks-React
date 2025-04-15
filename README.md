@@ -90,7 +90,66 @@ Watch TodoMaster in action! Our [demo video](https://youtu.be/your-demo-video-id
 
 Get TodoMaster running locally in minutes:
 
+# TodoMaster Setup and Usage Guide
+
+## Install Dependencies:
+
 1. **Clone the Repository**:
    ```bash
+Required packages: `react`, `react-dnd`, `react-dnd-html5-backend`, `react-dnd-touch-backend`, `animejs`, `react-toastify`, `react-confetti`, `moment`, `uuid`.
+
+npm install
+
+
+## Add Sound File (Optional):
+Place `click.mp3` in `public/sounds/` for deletion sound.
+
+Download from [freesound.org](https://freesound.org) or use your own short audio clip.
+
+## Run the App:
    git clone https://github.com/your-username/todomaster.git
    cd todomaster
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Build for Production (Optional):
+
+Deploy the `build/` folder to a hosting service like Netlify or Vercel.
+
+## Why TodoMaster Wins Hackathons
+TodoMaster isn’t just another todo app—it’s a delightful experience that blends functionality with flair:
+- **User-Centric Design**: Intuitive UI with tooltips, animations, and sound effects to keep users engaged.
+- **Technical Excellence**: Clean React code with hooks, optimized state updates, and robust error handling.
+- **Accessibility Focus**: ARIA labels and keyboard support ensure inclusivity.
+- **Polish**: Confetti, dark mode, and a custom favicon make it memorable.
+- **Scalability**: Modular components (e.g., TodoItem, TodoLists) ready for future features like API integration or collaboration.
+
+Judges will love the attention to detail, from the animated SVG background to the celebratory confetti that rewards productivity.
+
+## Potential Improvements
+With more time, we could add:
+- **API Integration**: Sync tasks with a backend (e.g., Firebase).
+- **Task Priorities**: Add high/medium/low priority tags.
+- **Export/Import**: Save tasks as JSON or CSV.
+- **Notifications**: Browser alerts for overdue tasks.
+- **Collaboration**: Share task lists with others in real-time.
+
+## Contributing
+Want to make TodoMaster even better? Contributions are welcome!
+1. Fork the repo.
+2. Create a feature branch (`git checkout -b feature/awesome-idea`).
+3. Commit changes (`git commit -m "Add awesome idea"`).
+4. Push to your fork (`git push origin feature/awesome-idea`).
+5. Open a Pull Request.
+
+Please follow the [Code of Conduct](CODE_OF_CONDUCT.md) and add tests for new features.
+
+## License
+This project is licensed under the MIT License. See LICENSE for details.
+
+## Acknowledgments
+- Inspired by productivity apps like Todoist and Notion.
+- Sound effect from [freesound.org](https://freesound.org).
+- Icons and design ideas from [flaticon.com](https://flaticon.com).
+- Built with ❤️ for the [Your Hackathon Name] hackathon.
+
+Let’s make productivity fun! Try TodoMaster, crush your tasks, and enjoy the confetti. Got feedback? Open an issue or tweet us at @YourTwitterHandle.
