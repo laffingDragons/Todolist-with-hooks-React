@@ -3,7 +3,8 @@
 **ToastMaster** is a vibrant, feature-packed todo list application built to supercharge productivity with style and interactivity. Designed for modern users, it combines intuitive task management with delightful animations, sound effects, and a celebratory confetti burst to make every completed task feel like a win. Whether you’re organizing work projects, personal errands, or side hustles, TodoMaster has you covered with accessibility, mobile support, and a polished UI that shines in both light and dark modes.
 
 <p align="center">
-  <img src="screenshot.png" alt="TodoMaster Screenshot" width="600"/>
+  <img width="1504" alt="image" src="https://github.com/user-attachments/assets/cb21232f-b9e3-4507-b7e7-bf924a118251" />
+
 </p>
 
 <p align="center">
@@ -67,10 +68,12 @@ TodoMaster is built with modern tools to ensure performance, scalability, and de
 ## 📸 Screenshots
 
 ### Light Mode with Category Filter
+<img width="1504" alt="image" src="https://github.com/user-attachments/assets/2c25a228-dfee-40e8-8982-043635912582" />
 
 
 
 ### Dark Mode with Confetti
+<img width="1492" alt="image" src="https://github.com/user-attachments/assets/740967db-e63c-4bbf-bcb2-bbd7ee366e2f" />
 
 
 *Add these images to your repo after capturing screenshots.*
