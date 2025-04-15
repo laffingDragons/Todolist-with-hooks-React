@@ -3,9 +3,10 @@ import { useDrag, useDrop } from 'react-dnd';
 import * as moment from 'moment';
 import anime from 'animejs';
 import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'react-toastify';
 
 const TodoItem = React.memo(
-    ({ todo, index, moveTodo, toggleTodo, parentId = null, isSubTask = false, addSubTask, updateTodo, deleteTodo }) => {
+    ({ todo, index, moveTodo, toggleTodo, parentId = null, isSubTask = false, addSubTask, updateTodo, deleteTodo, deletingTasks }) => {
         const [{ isDragging }, drag] = useDrag({
             type: 'TODO',
             item: { index, parentId },
@@ -28,6 +29,7 @@ const TodoItem = React.memo(
         const taskRef = useRef();
         const [isEditing, setIsEditing] = useState(false);
         const [editValue, setEditValue] = useState(todo.name);
+        const [dueDate, setDueDate] = useState(todo.dueDate || '');
 
         useEffect(() => {
             if (!isDragging) {
@@ -41,17 +43,21 @@ const TodoItem = React.memo(
             }
         }, [isDragging]);
 
-        const handleCheck = (e) => {
+        const handleCheck = () => {
             toggleTodo(todo.id, isSubTask, parentId);
-            e.preventDefault();
         };
 
         const handleEdit = () => {
             if (isEditing && editValue.trim()) {
-                updateTodo(todo.id, editValue, isSubTask, parentId);
+                updateTodo(todo.id, { name: editValue, dueDate: dueDate || null }, isSubTask, parentId);
+            } else if (isEditing) {
+                toast.error('Task name cannot be empty!');
+                return;
             }
             setIsEditing(!isEditing);
         };
+
+        const isOverdue = dueDate && !todo.complete && new Date(dueDate) < new Date();
 
         return (
             <div
@@ -59,9 +65,9 @@ const TodoItem = React.memo(
                     drag(drop(node));
                     taskRef.current = node;
                 }}
-                className="p-r mt-4"
-                style={{ marginLeft: isSubTask ? '20px' : '0px' }}
-                onClick={(e) => handleCheck(e)}
+                className={`p-r mt-4 todo-item ${isOverdue ? 'overdue' : ''} ${isDragging ? 'dragging' : ''}`}
+                style={{ marginLeft: isSubTask ? '20px' : '0px', display: deletingTasks.has(todo.id) ? 'none' : 'block' }}
+                data-task-id={todo.id}
             >
                 <input
                     type="checkbox"
@@ -69,25 +75,36 @@ const TodoItem = React.memo(
                     aria-label={`Mark ${todo.name} as ${todo.complete ? 'incomplete' : 'complete'}`}
                     className={isSubTask ? '_checkboxId-blue' : '_checkboxId'}
                     checked={todo.complete}
+                    onChange={handleCheck}
                 />
                 <label htmlFor={`checkbox-${todo.id}`}>
                     <div id="tick_mark"></div>
                 </label>
                 {isEditing ? (
-                    <input
-                        type="text"
-                        value={editValue}
-                        onChange={(e) => setEditValue(e.target.value)}
-                        onBlur={handleEdit}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleEdit();
-                        }}
-                        className="ml-4 title-todo add-input"
-                        autoFocus
-                    />
+                    <div className="edit-container">
+                        <input
+                            type="text"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            onBlur={handleEdit}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleEdit();
+                            }}
+                            className="ml-4 title-todo add-input"
+                            autoFocus
+                        />
+                        <input
+                            type="date"
+                            value={dueDate}
+                            onChange={(e) => setDueDate(e.target.value)}
+                            className="ml-4 add-input"
+                        />
+                    </div>
                 ) : (
-                    <div className="ml-4 title-todo" onDoubleClick={() => setIsEditing(true)}>
+                    <div className="ml-4 title-todo tooltip" onDoubleClick={() => setIsEditing(true)} data-tooltip="Double-click to edit">
                         {todo.name}
+                        {dueDate && <span className="due-date"> (Due: {moment(dueDate).format('MMM DD, YYYY')})</span>}
+                        <span className="category-tag">{todo.category}</span>
                     </div>
                 )}
                 {isSubTask && (
@@ -99,22 +116,39 @@ const TodoItem = React.memo(
                         )}
                     </div>
                 )}
+                {!isSubTask && todo.subTasks && (
+                    <div className="progress-bar">
+                        <div
+                            className="progress"
+                            style={{
+                                width: `${todo.subTasks.length ? (todo.subTasks.filter((st) => st.complete).length / todo.subTasks.length) * 100 : 0
+                                    }%`,
+                            }}
+                        ></div>
+                    </div>
+                )}
                 <div
-                    className="delete-icon"
+                    className="delete-icon tooltip"
                     onClick={(e) => {
                         e.stopPropagation();
                         deleteTodo(todo.id, isSubTask, parentId);
                     }}
+                    role="button"
+                    aria-label={`Delete ${todo.name}`}
+                    data-tooltip="Delete task"
                 >
                     🗑️
                 </div>
                 {!isSubTask && (
                     <div
-                        className="add-subtask-icon"
+                        className="add-subtask-icon tooltip"
                         onClick={(e) => {
                             e.stopPropagation();
                             addSubTask(todo.id);
                         }}
+                        role="button"
+                        aria-label={`Add subtask to ${todo.name}`}
+                        data-tooltip="Add subtask"
                     >
                         ➕
                     </div>
@@ -124,9 +158,10 @@ const TodoItem = React.memo(
     }
 );
 
-const TodoLists = ({ todos, toggleTodo, moveTodo, setTodos, updateTodo, deleteTodo }) => {
+const TodoLists = ({ todos, toggleTodo, moveTodo, setTodos, updateTodo, deleteTodo, deletingTasks }) => {
     const [showSubtaskInput, setShowSubtaskInput] = useState(null);
     const [newSubtask, setNewSubtask] = useState('');
+    const [subtaskDueDate, setSubtaskDueDate] = useState('');
     const inputRef = useRef();
 
     const addSubTask = useCallback((parentId) => {
@@ -136,25 +171,30 @@ const TodoLists = ({ todos, toggleTodo, moveTodo, setTodos, updateTodo, deleteTo
 
     const handleAddSubTask = useCallback(
         (parentId) => {
-            if (newSubtask.trim() !== '') {
-                setTodos((prevTodos) => {
-                    const updatedTodos = [...prevTodos];
-                    const parentTask = updatedTodos.find((todo) => todo.id === parentId);
-                    parentTask.subTasks.push({
-                        id: uuidv4(),
-                        name: newSubtask,
-                        complete: false,
-                        createdOn: new Date(),
-                        completedOn: '',
-                        type: 'subTask',
-                    });
-                    return updatedTodos;
-                });
-                setNewSubtask('');
-                setShowSubtaskInput(null);
+            if (newSubtask.trim() === '') {
+                toast.error('Subtask name cannot be empty!');
+                return;
             }
+            setTodos((prevTodos) => {
+                const updatedTodos = [...prevTodos];
+                const parentTask = updatedTodos.find((todo) => todo.id === parentId);
+                parentTask.subTasks.push({
+                    id: uuidv4(),
+                    name: newSubtask,
+                    complete: false,
+                    createdOn: new Date(),
+                    completedOn: '',
+                    dueDate: subtaskDueDate || null,
+                    type: 'subTask',
+                });
+                return updatedTodos;
+            });
+            toast.success('Subtask added!');
+            setNewSubtask('');
+            setSubtaskDueDate('');
+            setShowSubtaskInput(null);
         },
-        [newSubtask, setTodos]
+        [newSubtask, subtaskDueDate, setTodos]
     );
 
     return (
@@ -169,6 +209,7 @@ const TodoLists = ({ todos, toggleTodo, moveTodo, setTodos, updateTodo, deleteTo
                         addSubTask={addSubTask}
                         updateTodo={updateTodo}
                         deleteTodo={deleteTodo}
+                        deletingTasks={deletingTasks}
                     />
                     <div className="ml-4 date-todo">
                         {todo.completedOn ? (
@@ -192,11 +233,22 @@ const TodoLists = ({ todos, toggleTodo, moveTodo, setTodos, updateTodo, deleteTo
                                     if (e.key === 'Escape') {
                                         setShowSubtaskInput(null);
                                         setNewSubtask('');
+                                        setSubtaskDueDate('');
                                     }
                                 }}
                                 className="add-input"
                             />
-                            <button className="primary-btn" onClick={() => handleAddSubTask(todo.id)}>
+                            <input
+                                type="date"
+                                value={subtaskDueDate}
+                                onChange={(e) => setSubtaskDueDate(e.target.value)}
+                                className="add-input"
+                            />
+                            <button
+                                className="primary-btn"
+                                onClick={() => handleAddSubTask(todo.id)}
+                                aria-label="Add subtask"
+                            >
                                 Add Subtask
                             </button>
                             <button
@@ -204,7 +256,9 @@ const TodoLists = ({ todos, toggleTodo, moveTodo, setTodos, updateTodo, deleteTo
                                 onClick={() => {
                                     setShowSubtaskInput(null);
                                     setNewSubtask('');
+                                    setSubtaskDueDate('');
                                 }}
+                                aria-label="Cancel"
                             >
                                 Cancel
                             </button>
@@ -223,6 +277,7 @@ const TodoLists = ({ todos, toggleTodo, moveTodo, setTodos, updateTodo, deleteTo
                                     isSubTask={true}
                                     updateTodo={updateTodo}
                                     deleteTodo={deleteTodo}
+                                    deletingTasks={deletingTasks}
                                 />
                             ))}
                         </div>

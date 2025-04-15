@@ -5,13 +5,19 @@ import TodoLists from './TodoLists';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import anime from 'animejs';
+import Confetti from 'react-confetti';
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const [deletingTasks, setDeletingTasks] = useState(new Set());
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState('All');
 
-  const isMobile = () => {
-    return /Mobi|Android/i.test(navigator.userAgent);
-  };
+  const isMobile = () => /Mobi|Android/i.test(navigator.userAgent);
 
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem('todos'));
@@ -25,24 +31,37 @@ function App() {
     return () => clearTimeout(handler);
   }, [todos]);
 
+  useEffect(() => {
+    localStorage.setItem('theme', theme);
+    document.body.className = theme;
+  }, [theme]);
+
   const todoNameRef = useRef();
+  const todoCategoryRef = useRef();
 
   const addTodo = useCallback(() => {
     const name = todoNameRef.current.value;
-    if (name) {
-      setTodos((prevTodos) => [
-        {
-          id: uuidv4(),
-          name: name,
-          complete: false,
-          createdOn: new Date(),
-          completedOn: '',
-          subTasks: [],
-        },
-        ...prevTodos,
-      ]);
-      todoNameRef.current.value = '';
+    const category = todoCategoryRef.current.value;
+    if (!name.trim()) {
+      toast.error('Task name cannot be empty!');
+      return;
     }
+    setTodos((prevTodos) => [
+      {
+        id: uuidv4(),
+        name,
+        category: category || 'General',
+        complete: false,
+        createdOn: new Date(),
+        completedOn: '',
+        dueDate: null,
+        subTasks: [],
+      },
+      ...prevTodos,
+    ]);
+    toast.success('Task added!');
+    todoNameRef.current.value = '';
+    todoCategoryRef.current.value = 'General';
   }, []);
 
   const toggleTodo = useCallback((id, isSubTask = false, parentId = null) => {
@@ -69,40 +88,97 @@ function App() {
         }
         return todo;
       });
+      // Check if all tasks are completed
+      if (newTodos.every((todo) => todo.complete && todo.subTasks.every((st) => st.complete))) {
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 3000);
+      }
       return newTodos;
     });
+    toast.info('Task updated!');
   }, []);
 
-  const updateTodo = useCallback((id, newName, isSubTask = false, parentId = null) => {
+  const updateTodo = useCallback((id, updates, isSubTask = false, parentId = null) => {
     setTodos((prevTodos) => {
       const newTodos = prevTodos.map((todo) => {
         if (isSubTask && todo.id === parentId) {
           return {
             ...todo,
             subTasks: todo.subTasks.map((subTask) =>
-              subTask.id === id ? { ...subTask, name: newName } : subTask
+              subTask.id === id ? { ...subTask, ...updates } : subTask
             ),
           };
         } else if (!isSubTask && todo.id === id) {
-          return { ...todo, name: newName };
+          return { ...todo, ...updates };
         }
         return todo;
       });
       return newTodos;
     });
+    toast.success('Task updated!');
   }, []);
 
   const deleteTodo = useCallback((id, isSubTask = false, parentId = null) => {
-    setTodos((prevTodos) => {
-      if (isSubTask && parentId) {
-        return prevTodos.map((todo) =>
-          todo.id === parentId
-            ? { ...todo, subTasks: todo.subTasks.filter((subTask) => subTask.id !== id) }
-            : todo
-        );
-      }
-      return prevTodos.filter((todo) => todo.id !== id);
+    const sound = new Audio('https://freesound.org/data/previews/423/423241_2289448-lq.mp3');
+    sound.volume = 0.3;
+    sound.play().catch(() => { }); // Silent catch for network issues
+    setDeletingTasks((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(id);
+      return newSet;
     });
+
+    const element = document.querySelector(`[data-task-id="${id}"]`);
+    if (element) {
+      anime({
+        targets: element,
+        opacity: 0,
+        translateY: -10,
+        duration: 300,
+        easing: 'easeOutQuad',
+        complete: () => {
+          setTodos((prevTodos) => {
+            let newTodos;
+            if (isSubTask && parentId) {
+              newTodos = prevTodos.map((todo) =>
+                todo.id === parentId
+                  ? { ...todo, subTasks: todo.subTasks.filter((subTask) => subTask.id !== id) }
+                  : todo
+              );
+            } else {
+              newTodos = prevTodos.filter((todo) => todo.id !== id);
+            }
+            return newTodos;
+          });
+          setDeletingTasks((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(id);
+            return newSet;
+          });
+          toast.success('Task deleted!');
+        },
+      });
+    } else {
+      setTodos((prevTodos) => {
+        let newTodos;
+        if (isSubTask && parentId) {
+          newTodos = prevTodos.map((todo) =>
+            todo.id === parentId
+              ? { ...todo, subTasks: todo.subTasks.filter((subTask) => subTask.id !== id) }
+              : todo
+          );
+        } else {
+          newTodos = prevTodos.filter((todo) => todo.id !== id);
+        }
+        return newTodos;
+      });
+      setDeletingTasks((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
+      toast.success('Task deleted!');
+    }
   }, []);
 
   const moveTodo = useCallback((dragIndex, hoverIndex, parentId = null) => {
@@ -125,14 +201,34 @@ function App() {
   }, []);
 
   const completeTodos = useCallback(() => {
-    setTodos((prevTodos) => prevTodos.filter((x) => !x.complete));
+    setTodos((prevTodos) => {
+      const remaining = prevTodos.filter((x) => !x.complete);
+      if (remaining.length === 0 && prevTodos.length > 0) {
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 3000);
+      }
+      return remaining;
+    });
+    toast.success('Completed tasks removed!');
   }, []);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  const filteredTodos = todos.filter(
+    (todo) => categoryFilter === 'All' || todo.category === categoryFilter
+  );
 
   return (
     <DndProvider backend={isMobile() ? TouchBackend : HTML5Backend}>
       <>
-        <div className="z-100 conatiner">
-          <h1 className="primary-text f-huge text-center">Todolist</h1>
+        {showConfetti && <Confetti />}
+        <div className="z-100 container">
+          <button onClick={toggleTheme} className="theme-toggle" aria-label="Toggle theme">
+            {theme === 'light' ? '🌙' : '☀️'}
+          </button>
+          <h1 className="primary-text f-huge text-center">ToastMaster</h1>
           <div className="text-center d-block d-sm-none sticky">
             <input
               ref={todoNameRef}
@@ -143,24 +239,61 @@ function App() {
                   addTodo();
                 }
               }}
+              placeholder="Add a new task"
             />
-            <button onClick={addTodo} className="primary-btn">
-              Add todo
-            </button>
-            <br />
+            <select ref={todoCategoryRef} className="add-input category-select">
+              <option value="General">General</option>
+              <option value="Work">Work</option>
+              <option value="Personal">Personal</option>
+            </select>
+            <button onClick={addTodo} className="primary-btn">Add Todo</button>
           </div>
 
-          <div className="primary-text">{todos.filter((x) => !x.complete).length} todos left</div>
-          <TodoLists
-            todos={todos.slice().reverse()}
-            toggleTodo={toggleTodo}
-            moveTodo={moveTodo}
-            setTodos={setTodos}
-            updateTodo={updateTodo}
-            deleteTodo={deleteTodo}
-          />
+          <div className="category-filter">
+            <button
+              className={`category-btn ${categoryFilter === 'All' ? 'active' : ''}`}
+              onClick={() => setCategoryFilter('All')}
+            >
+              All
+            </button>
+            <button
+              className={`category-btn ${categoryFilter === 'General' ? 'active' : ''}`}
+              onClick={() => setCategoryFilter('General')}
+            >
+              General
+            </button>
+            <button
+              className={`category-btn ${categoryFilter === 'Work' ? 'active' : ''}`}
+              onClick={() => setCategoryFilter('Work')}
+            >
+              Work
+            </button>
+            <button
+              className={`category-btn ${categoryFilter === 'Personal' ? 'active' : ''}`}
+              onClick={() => setCategoryFilter('Personal')}
+            >
+              Personal
+            </button>
+          </div>
+
+          <div className="primary-text">{filteredTodos.filter((x) => !x.complete).length} todos left</div>
+          {filteredTodos.length === 0 ? (
+            <div className="empty-state">
+              <p>No tasks yet—add one to get started! 🚀</p>
+            </div>
+          ) : (
+            <TodoLists
+              todos={filteredTodos.slice().reverse()}
+              toggleTodo={toggleTodo}
+              moveTodo={moveTodo}
+              setTodos={setTodos}
+              updateTodo={updateTodo}
+              deleteTodo={deleteTodo}
+              deletingTasks={deletingTasks}
+            />
+          )}
           <button onClick={completeTodos} className="mt-4 secondary-btn">
-            Remove all checked todo
+            Remove all checked todos
           </button>
         </div>
 
@@ -233,6 +366,7 @@ function App() {
           <div className="wave two"></div>
           <div className="wave three"></div>
         </div>
+        <ToastContainer position="top-right" autoClose={2000} />
       </>
     </DndProvider>
   );
