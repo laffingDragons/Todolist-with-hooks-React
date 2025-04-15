@@ -1,70 +1,96 @@
-# Getting Started with Create React App
+# ToastMaster 🎯
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**ToastMaster** is a vibrant, feature-packed todo list application built to supercharge productivity with style and interactivity. Designed for modern users, it combines intuitive task management with delightful animations, sound effects, and a celebratory confetti burst to make every completed task feel like a win. Whether you’re organizing work projects, personal errands, or side hustles, TodoMaster has you covered with accessibility, mobile support, and a polished UI that shines in both light and dark modes.
 
-## Available Scripts
+<p align="center">
+  <img src="screenshot.png" alt="TodoMaster Screenshot" width="600"/>
+</p>
 
-In the project directory, you can run:
+<p align="center">
+  <a href="https://your-live-demo-link.com">Live Demo</a> • 
+  <a href="https://youtu.be/your-demo-video-id">Demo Video</a>
+</p>
 
-### `npm start`
+## 🚀 Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+TodoMaster stands out with a rich set of features that make task management fun, efficient, and accessible:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Task Management**:
+  - Add, edit, delete, and reorder tasks and subtasks with smooth drag-and-drop.
+  - Assign categories (General, Work, Personal) to organize tasks.
+  - Set due dates with visual overdue indicators.
+  - Track subtask progress with dynamic progress bars.
 
-### `npm test`
+- **Interactive UX**:
+  - **Sound Effects**: Hear a satisfying click when deleting tasks.
+  - **Confetti Celebration**: Burst of confetti when all tasks are completed or cleared.
+  - **Animations**: Fade-in/out transitions and animated checkboxes powered by Anime.js.
+  - **Toast Notifications**: Real-time feedback for actions using react-toastify.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Customization**:
+  - **Category Filtering**: View tasks by category or all at once.
+  - **Dark/Light Mode**: Toggle themes with a sleek button, persisted via localStorage.
+  - **Tooltips**: Hover for guidance on editing, deleting, or adding subtasks.
 
-### `npm run build`
+- **Accessibility**:
+  - ARIA labels for screen readers (e.g., checkboxes, buttons).
+  - Keyboard support (Enter to add tasks, Escape to cancel).
+  - High-contrast UI for readability.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Mobile-Friendly**:
+  - Responsive design with touch-based drag-and-drop (via react-dnd TouchBackend).
+  - Sticky input bar for easy task entry on small screens.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Persistence**:
+  - Tasks and themes saved to localStorage for seamless sessions.
+  - Robust state management to prevent data loss.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Branding**:
+  - Custom favicon and “TodoMaster” title for a professional touch.
+  - Eye-catching SVG background with animated shapes.
 
-### `npm run eject`
+## 🛠 Tech Stack
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+TodoMaster is built with modern tools to ensure performance, scalability, and developer-friendly code:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Frontend**: React (functional components, hooks)
+- **Drag-and-Drop**: react-dnd (HTML5Backend for desktop, TouchBackend for mobile)
+- **Animations**: Anime.js for smooth transitions
+- **Notifications**: react-toastify for user feedback
+- **Confetti**: react-confetti for celebratory effects
+- **Date Handling**: Moment.js for formatting due dates
+- **UUID**: uuid for unique task IDs
+- **Styling**: CSS with CSS Variables for theming, responsive media queries
+- **Persistence**: localStorage for data and theme storage
+- **Build Tool**: Create React App
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🎥 Demo Video
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Watch TodoMaster in action! Our [demo video](https://youtu.be/your-demo-video-id) showcases:
+- Adding tasks with categories
+- Filtering by category
+- Dragging tasks and subtasks
+- Deleting tasks with sound effects
+- Completing tasks to trigger confetti
+- Toggling dark/light mode
 
-## Learn More
+*Replace the link with your uploaded video after recording.*
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📸 Screenshots
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Light Mode with Category Filter
+![Light Mode](screenshot-light.png)
 
-### Code Splitting
+### Dark Mode with Confetti
+![Dark Mode](screenshot-dark.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+*Add these images to your repo after capturing screenshots.*
 
-### Analyzing the Bundle Size
+## ⚙️ Setup Instructions
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Get TodoMaster running locally in minutes:
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/your-username/todomaster.git
+   cd todomaster
