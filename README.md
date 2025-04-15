@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://laffingdragons.github.io/Todolist-with-hooks-React/">Live Demo</a> • 
+  <a href="https://laffingdragons.github.io/Todolist-with-hooks-React/" target="_blank">Live Demo</a> • 
 </p>
 
 ## 🚀 Features
