@@ -144,4 +144,4 @@ This project is licensed under the MIT License. See LICENSE for details.
 - Icons and design ideas from [flaticon.com](https://flaticon.com).
 - Built with ❤️ for the [Akshay Patil] Outlier.ai hackathon.
 
-Let’s make productivity fun! Try TodoMaster, crush your tasks, and enjoy the confetti. Got feedback? Open an issue or tweet us at @YourTwitterHandle.
+Let’s make productivity fun! Try TodoMaster, crush your tasks, and enjoy the confetti. Got feedback? Open an issue or tweet us at @[LinkedIn](https://www.linkedin.com/in/akkshay-paatil/).
