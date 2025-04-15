@@ -47,7 +47,7 @@ body {
     transform: rotate(0deg);
   }
 
-  from {
+  to {
     transform: rotate(360deg);
   }
 }
@@ -156,7 +156,6 @@ body {
 label {
   position: absolute;
   top: 50%;
-  /* right: 0; */
   left: 0;
   width: 20px;
   height: 20px;
@@ -166,15 +165,14 @@ label {
   border-radius: 50%;
   box-shadow: 0 7px 10px #ffbeb8;
   cursor: pointer;
-  transition: 0.2s ease transform, 0.2s ease background-color,
-    0.2s ease box-shadow;
+  transition: 0.2s ease transform, 0.2s ease background-color, 0.2s ease box-shadow;
   overflow: hidden;
   z-index: 1;
   border: 2px solid rgba(0, 0, 0, 0.44);
 }
 
 label:before {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   right: 0;
@@ -214,7 +212,7 @@ label:active {
 
 #tick_mark:before,
 #tick_mark:after {
-  content: "";
+  content: '';
   position: absolute;
   background-color: #fff;
   border-radius: 2px;
@@ -269,7 +267,7 @@ label:active {
 }
 
 .p-r {
-  position: relative
+  position: relative;
 }
 
 .z-100 {
@@ -294,7 +292,6 @@ label:active {
 .add-input {
   background: transparent;
   font-size: 16px;
-  /* border: none; */
   border-radius: 16px;
   border: 1px solid #b693f5;
   padding: 7px 10px;
@@ -305,7 +302,7 @@ label:active {
 .primary-btn {
   font-size: 16px;
   border-radius: 15px;
-  border: 1px solid #E7DFF5;
+  border: 1px solid #e7dff5;
   background: #7b50ff;
   color: white;
   margin-left: 4px;
@@ -313,11 +310,12 @@ label:active {
 }
 
 .secondary-btn {
-  font-size: 18px;
+  font-size: 16px;
   border-radius: 15px;
-  border: 1px solid #E7DFF5;
-  background: #07D210;
+  border: 1px solid #e7dff5;
+  background: #07d210;
   color: white;
+  margin-left: 4px;
   padding: 8px 10px;
 }
 
@@ -337,6 +335,7 @@ label:active {
 .date-todo {
   font-size: 12px;
   color: #626262dd;
+  display: inline-block;
 }
 
 .title-todo {
@@ -345,52 +344,61 @@ label:active {
 
 .add-subtask-icon {
   float: right;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.delete-icon {
+  float: right;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.subtask-input-container {
+  margin-left: 20px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.subtask-input-container input {
+  flex-grow: 1;
+  margin-right: 8px;
 }
 
 /* Mobile view styles */
 @media (max-width: 768px) {
-  .container {
+  .conatiner {
     margin: 5%;
-    /* Reduce the margin for mobile devices */
   }
 
   .f-huge {
     font-size: 40px;
-    /* Adjust font size for mobile */
   }
 
   .text-center {
     font-size: 36px;
-    /* Adjust font size for mobile */
   }
 
   .add-input {
     font-size: 14px;
-    /* Reduce input font size */
     padding: 5px 8px;
-    /* Adjust padding */
   }
 
   .primary-btn {
     font-size: 14px;
-    /* Reduce button font size */
     padding: 6px 8px;
-    /* Adjust padding */
   }
 
   .secondary-btn {
-    font-size: 16px;
-    /* Adjust secondary button font size */
+    font-size: 14px;
     padding: 6px 8px;
-    /* Adjust padding */
   }
 
   .todo-item {
     font-size: 14px;
-    /* Adjust task item font size */
   }
 
-  /* Adjust the size of the waves to fit the mobile screen */
   .wave {
     width: 800px;
     height: 600px;
@@ -399,7 +407,6 @@ label:active {
 
 ._checkboxId-blue:checked+label {
   background-color: #3498db;
-  /* Blue color */
   box-shadow: 0 7px 10px #92c8ff;
 }
 
