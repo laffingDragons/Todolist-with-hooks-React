@@ -7,8 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://your-live-demo-link.com">Live Demo</a> • 
-  <a href="https://youtu.be/your-demo-video-id">Demo Video</a>
+  <a href="https://laffingdragons.github.io/Todolist-with-hooks-React/">Live Demo</a> • 
 </p>
 
 ## 🚀 Features
@@ -64,25 +63,15 @@ TodoMaster is built with modern tools to ensure performance, scalability, and de
 - **Persistence**: localStorage for data and theme storage
 - **Build Tool**: Create React App
 
-## 🎥 Demo Video
-
-Watch TodoMaster in action! Our [demo video](https://youtu.be/your-demo-video-id) showcases:
-- Adding tasks with categories
-- Filtering by category
-- Dragging tasks and subtasks
-- Deleting tasks with sound effects
-- Completing tasks to trigger confetti
-- Toggling dark/light mode
-
-*Replace the link with your uploaded video after recording.*
 
 ## 📸 Screenshots
 
 ### Light Mode with Category Filter
-![Light Mode](screenshot-light.png)
+
+
 
 ### Dark Mode with Confetti
-![Dark Mode](screenshot-dark.png)
+
 
 *Add these images to your repo after capturing screenshots.*
 
@@ -96,9 +85,10 @@ Get TodoMaster running locally in minutes:
 
 1. **Clone the Repository**:
    ```bash
+npm install
+
 Required packages: `react`, `react-dnd`, `react-dnd-html5-backend`, `react-dnd-touch-backend`, `animejs`, `react-toastify`, `react-confetti`, `moment`, `uuid`.
 
-npm install
 
 
 ## Add Sound File (Optional):
@@ -150,6 +140,6 @@ This project is licensed under the MIT License. See LICENSE for details.
 - Inspired by productivity apps like Todoist and Notion.
 - Sound effect from [freesound.org](https://freesound.org).
 - Icons and design ideas from [flaticon.com](https://flaticon.com).
-- Built with ❤️ for the [Your Hackathon Name] hackathon.
+- Built with ❤️ for the [Akshay Patil] Outlier.ai hackathon.
 
 Let’s make productivity fun! Try TodoMaster, crush your tasks, and enjoy the confetti. Got feedback? Open an issue or tweet us at @YourTwitterHandle.
