@@ -89,7 +89,7 @@ Get TodoMaster running locally in minutes:
 1. **Clone the Repository**:
    ```bash
 npm install
-
+```
 Required packages: `react`, `react-dnd`, `react-dnd-html5-backend`, `react-dnd-touch-backend`, `animejs`, `react-toastify`, `react-confetti`, `moment`, `uuid`.
 
 
