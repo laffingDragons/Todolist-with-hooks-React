@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import * as moment from 'moment';
+import animeI18n from 'moment';
 import anime from 'animejs';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-toastify';
@@ -9,7 +10,7 @@ const TodoItem = React.memo(
     ({ todo, index, moveTodo, toggleTodo, parentId = null, isSubTask = false, addSubTask, updateTodo, deleteTodo, deletingTasks }) => {
         const [{ isDragging }, drag] = useDrag({
             type: 'TODO',
-            item: { index, parentId },
+            item: { id: todo.id, index, parentId },
             collect: (monitor) => ({
                 isDragging: monitor.isDragging(),
             }),
@@ -18,10 +19,8 @@ const TodoItem = React.memo(
         const [, drop] = useDrop({
             accept: 'TODO',
             hover: (item) => {
-                if (item.index !== index || item.parentId !== parentId) {
-                    moveTodo(item.index, index, item.parentId || parentId);
-                    item.index = index;
-                    item.parentId = parentId;
+                if (item.id !== todo.id) {
+                    moveTodo(item.id, todo.id, item.parentId || parentId);
                 }
             },
         });

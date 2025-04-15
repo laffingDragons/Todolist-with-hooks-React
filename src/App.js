@@ -21,7 +21,70 @@ function App() {
 
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem('todos'));
-    if (storedTodos) setTodos(storedTodos);
+    if (storedTodos && storedTodos.length > 0) {
+      setTodos(storedTodos);
+    } else {
+      // Initialize with dummy tasks
+      const dummyTodos = [
+        {
+          id: uuidv4(),
+          name: 'Plan team meeting',
+          category: 'Work',
+          complete: false,
+          createdOn: new Date(),
+          completedOn: '',
+          dueDate: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString().split('T')[0],
+          subTasks: [
+            { id: uuidv4(), name: 'Book conference room', complete: true, createdOn: new Date(), completedOn: new Date(), dueDate: null },
+            { id: uuidv4(), name: 'Prepare slides', complete: false, createdOn: new Date(), completedOn: '', dueDate: null },
+          ],
+        },
+        {
+          id: uuidv4(),
+          name: 'Buy groceries',
+          category: 'Personal',
+          complete: false,
+          createdOn: new Date(),
+          completedOn: '',
+          dueDate: new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split('T')[0], // Overdue
+          subTasks: [],
+        },
+        {
+          id: uuidv4(),
+          name: 'Finish hackathon project',
+          category: 'Work',
+          complete: false,
+          createdOn: new Date(),
+          completedOn: '',
+          dueDate: null,
+          subTasks: [
+            { id: uuidv4(), name: 'Fix bugs', complete: false, createdOn: new Date(), completedOn: '', dueDate: null },
+          ],
+        },
+        {
+          id: uuidv4(),
+          name: 'Read a book',
+          category: 'Personal',
+          complete: true,
+          createdOn: new Date(new Date().setDate(new Date().getDate() - 3)),
+          completedOn: new Date(),
+          dueDate: null,
+          subTasks: [],
+        },
+        {
+          id: uuidv4(),
+          name: 'Update resume',
+          category: 'General',
+          complete: false,
+          createdOn: new Date(),
+          completedOn: '',
+          dueDate: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0],
+          subTasks: [],
+        },
+      ];
+      setTodos(dummyTodos);
+      localStorage.setItem('todos', JSON.stringify(dummyTodos));
+    }
   }, []);
 
   useEffect(() => {
@@ -88,7 +151,6 @@ function App() {
         }
         return todo;
       });
-      // Check if all tasks are completed
       if (newTodos.every((todo) => todo.complete && todo.subTasks.every((st) => st.complete))) {
         setShowConfetti(true);
         setTimeout(() => setShowConfetti(false), 3000);
@@ -121,7 +183,7 @@ function App() {
   const deleteTodo = useCallback((id, isSubTask = false, parentId = null) => {
     const sound = new Audio('https://freesound.org/data/previews/423/423241_2289448-lq.mp3');
     sound.volume = 0.3;
-    sound.play().catch(() => { }); // Silent catch for network issues
+    sound.play().catch(() => { });
     setDeletingTasks((prev) => {
       const newSet = new Set(prev);
       newSet.add(id);
@@ -181,19 +243,23 @@ function App() {
     }
   }, []);
 
-  const moveTodo = useCallback((dragIndex, hoverIndex, parentId = null) => {
+  const moveTodo = useCallback((dragId, hoverId, parentId = null) => {
     setTodos((prevTodos) => {
       if (parentId) {
+        // Move subtask within parent
         const newTodos = [...prevTodos];
         const parentTodo = newTodos.find((todo) => todo.id === parentId);
-        const dragSubTask = parentTodo.subTasks[dragIndex];
-        parentTodo.subTasks.splice(dragIndex, 1);
+        const dragIndex = parentTodo.subTasks.findIndex((st) => st.id === dragId);
+        const hoverIndex = parentTodo.subTasks.findIndex((st) => st.id === hoverId);
+        const [dragSubTask] = parentTodo.subTasks.splice(dragIndex, 1);
         parentTodo.subTasks.splice(hoverIndex, 0, dragSubTask);
         return newTodos;
       } else {
-        const dragTodo = prevTodos[dragIndex];
+        // Move main task
+        const dragIndex = prevTodos.findIndex((todo) => todo.id === dragId);
+        const hoverIndex = prevTodos.findIndex((todo) => todo.id === hoverId);
         const newTodos = [...prevTodos];
-        newTodos.splice(dragIndex, 1);
+        const [dragTodo] = newTodos.splice(dragIndex, 1);
         newTodos.splice(hoverIndex, 0, dragTodo);
         return newTodos;
       }
@@ -228,7 +294,7 @@ function App() {
           <button onClick={toggleTheme} className="theme-toggle" aria-label="Toggle theme">
             {theme === 'light' ? '🌙' : '☀️'}
           </button>
-          <h1 className="primary-text f-huge text-center">ToastMaster</h1>
+          <h1 className="primary-text f-huge text-center">TodoMaster</h1>
           <div className="text-center d-block d-sm-none sticky">
             <input
               ref={todoNameRef}
@@ -312,7 +378,7 @@ function App() {
               d="M607.694,164.319 L612.680,161.693 L615.306,166.680 L610.320,169.305 L607.694,164.319 Z"
             ></path>
             <path
-              id="shape9"
+              id="shape alarming-shape"
               fillRule="evenodd"
               fill="rgb(93, 203, 250)"
               d="M667.343,205.646 L679.152,213.179 L671.620,224.988 L659.810,217.456 L667.343,205.646 Z"
